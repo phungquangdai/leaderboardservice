@@ -35,7 +35,80 @@ timeupdate (TIMESTAMP)
 ```
 ### Implement
 #### User should be able to add/update a username and a score
-1. User login to game. Check if user is Adminstrator or not. If not, add score to user by 'id_user'
+1. User login to game.
+* serverside Login.php
+```
+<?php
+	$servername = "localhost";
+	$username =  "root";
+	$password = "";
+	$dbName = "leaderboardemo";
+	
+	//Make Connection
+	$conn = new mysqli($servername, $username, $password, $dbName);
+	//Check Connection
+	if(!$conn){
+		die("Connection Failed. ". mysqli_connect_error());
+	}
+
+		if (isset($_POST["namepost"]) && isset($_POST["_passwordpost"])){
+			$user_name = $_POST["namepost"];
+	$user_pass =  $_POST["_passwordpost"];
+		}
+		else{
+			$user_name = null;
+			$user_pass = null;
+		}
+		
+	$sql = "SELECT Password FROM user WHERE name = '".$user_name."'"; 
+	$result = mysqli_query($conn ,$sql);
+	
+	if(mysqli_num_rows($result) > 0){
+		//show data for each row
+		while($row = mysqli_fetch_assoc($result)){
+			if ($row ['Password'] == $user_pass ){
+				echo "login success";
+				echo $row;
+			} else {
+				echo "user not found";
+				echo "password is =".$row['Password']; 
+			}
+	}}	else {
+				echo "user not found";
+				echo "password is =".$row['Password']; 
+			}
+?>
+```
+
+* clientside Login.cs
+```
+	public string inputUserName;
+	public string inputPassword;
+
+	string LoginURL = "http://localhost/leaderboard/Login.php";
+
+	// Use this for initialization
+	void Start () {
+
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (Input.GetKeyDown (KeyCode.L)) {
+			StartCoroutine( LogintoDB (inputUserName, inputPassword));
+		}
+	}
+
+	IEnumerator LogintoDB(string username1, string password1){
+		WWWForm form = new WWWForm();
+		form.AddField("namepost", username1);
+		form.AddField("_passwordpost", password1);
+		WWW www = new WWW (LoginURL,form);
+		yield return www;
+		Debug.Log (www.text);
+	}
+```
+
 * serverside
 Addscore.php
 ```
@@ -152,7 +225,7 @@ timeupdate (TIMESTAMP)
 		}
 	}
 ```
-* then create function getHighScore() to query and return high score of user. Input is username and password like "DAVID|123456"
+* then create function getHighScore() to query and return high score of user. Input are username and password like "DAVID|123456"
  
  ```
  	public string getHighScore(string data){
