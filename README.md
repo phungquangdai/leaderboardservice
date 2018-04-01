@@ -34,7 +34,7 @@ timeupdate (TIMESTAMP)
 
 ```
 ### Implement
-#### User should be able to add/update a username and a score
+
 1. User login to game.
 * serverside Login.php
 ```
@@ -108,23 +108,46 @@ timeupdate (TIMESTAMP)
 		Debug.Log (www.text);
 	}
 ```
-
+2. User add score to database 
 * serverside
 Addscore.php
 ```
-$id_user = $_POST["id_user"];
-$highscore = $_POST["highscore"];
-$timeupdate = $_POST["timeupdate"];
-$sql = "INSERT INTO highscore (id_user, highscore, timeupdate)
-			VALUES ('".$id_user."','".$highscore."','".$timeupdate."')";
+	//Make Connection
+	$conn = new mysqli($servername, $username, $password, $dbName);
+	//Check Connection
+	if(!$conn){
+		die("Connection Failed. ". mysqli_connect_error());
+	}
+	if (isset($_POST["username_post"]) && isset($_POST["_highscore"])){
+			$username = $_POST["username_post"];
+	$_highscore =  $_POST["_highscore"];
+    $_timecreate =  $_POST["_timecreate"];
+
+		}
+		else{
+			$id_user = null;
+			$_highscore = null;
+			$timecreate = null;
+		}
+		$sql = "INSERT INTO highscore (id_user, highscore, timecreate) VALUES(
+		          (SELECT
+				  id_user 	
+				  FROM user
+				  WHERE username = '".$username"'),
+				  $_highscore,
+				  $_timecreate,
+				  )
+	$result = mysqli_query($conn ,$sql);
+	if(!result) echo "there was an error";
+	else echo "insert highscore successful.";
 ```
 * clientside 
 Addscore.cs
 ```
-	IEnumerator AddScore(string id_user, string highscore,System.DateTime timeupdate ){
+	IEnumerator AddScore(string username, string highscore,System.DateTime timeupdate ){
 	    double timeStamp = ConvertToToTimestamp(timeupdate);
 		WWWForm form = new WWWForm();
-		form.AddField("id_user", id_user);
+		form.AddField("username_post", username);
 		form.AddField("highscore", highscore);
 		form.AddField("timeupdate", timeStamp);
 		var www = UnityWebRequest.Post(AddScoreURL,form);
