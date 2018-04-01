@@ -118,7 +118,61 @@ timeupdate (TIMESTAMP)
 
 ```
 ### Implement
-1. user login with correct username and password to server. then server will respon result highscore
+1. make file DatabaseHandler.cs to connect database MYSQL and implement query
+* DatabaseHandler.cs
+```
+	void Awake(){
+		DontDestroyOnLoad (this.gameObject);
+		connectionString = "Server=" + host + ";Database=" + database + ";User=" + user + ";Password=" + password + ";Pooling=";
+		if (pooling) {
+			connectionString += "True";
+		} else {
+			connectionString += "False";
+		}
+		try{
+			con = new MySqlConnection(connectionString);
+			con.Open();
+			Debug.Log("Mysql state: "+con.State);
+
+			string sql = "SELECT * FROM user";
+			cmd = new MySqlCommand(sql, con);
+			//			string sql = "SELECT * FROM clothes";
+			//			cmd = new MySqlCommand(sql, con);
+						rdr = cmd.ExecuteReader();
+
+						while (rdr.Read())
+						{
+							Debug.Log("???");
+							Debug.Log(rdr[0]+" -- "+rdr[1]);
+			    		}
+				    	rdr.Close();
+
+		}catch(Exception e){
+			Debug.Log (e);
+		}
+	}
+```
+* then create function getHighScore() to return high score of user. Input is username and password like "DAVID|123456"
+ 
+ ```
+ 	public string getHighScore(string data){
+		Debug.Log ("databasehandler.gethighscore");
+		string[] items = data.Split ('|');
+		string sql = "SELECT h.id_user, h.highscore, h.timecreate FROM highscore h JOIN user u ON h.id_user = u.id_user WHERE u.name = '" + items[0] + "' AND u.Password = '" + items[1] + "'";
+		cmd = new MySqlCommand(sql, con);
+		using (rdr = cmd.ExecuteReader ()) {
+			while (rdr.Read ()) {
+				items [0] = rdr [0].ToString();
+				items [1] = rdr [1].ToString();
+
+			}
+		}
+		Debug.Log ("databasehandler" + items[0] + items[1]);
+		return items[1].ToString();
+	} 
+ ```
+
+ 2. user login with correct username and password to server. then server will respon result highscore
 * client.cs
 ```
 	public void SendMessageToServer()
@@ -181,4 +235,8 @@ void Connect(String server, int port, String message)
 		Console.WriteLine("\n Press Enter to continue...");
 		Console.Read();
 	}
+```
+*server.cs
+```
+
 ```
