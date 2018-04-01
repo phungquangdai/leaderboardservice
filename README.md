@@ -91,7 +91,7 @@ $sql = "DELETE user, highscore
                WHERE u.id_user = '".$id_user."'		  
 ```
 
-## II.SOCKET connection
+## II.SOCKET CONNECTION
 ### Prerequisites
 
 You need to install something first
@@ -172,7 +172,7 @@ timeupdate (TIMESTAMP)
 	} 
  ```
 
- 2. user login with correct username and password to server. then server will respon result highscore
+ 2. user login with correct username and password to server. then server will respond result highscore
 * client.cs
 ```
 	public void SendMessageToServer()
@@ -189,9 +189,6 @@ void Connect(String server, int port, String message)
 		try
 		{
 			// Create a TcpClient.
-			// Note, for this client to work you need to have a TcpServer 
-			// connected to the same address as specified by the server, port
-			// combination.
 			TcpClient client = new TcpClient(server, port);
 
 			// Translate the passed message into ASCII and store it as a Byte array.
@@ -238,7 +235,7 @@ void Connect(String server, int port, String message)
 ```
 
 3. server get information from client and query into database to return the result back
-*server.cs
+* server.cs
 
 ```
 	void Update () {
