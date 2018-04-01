@@ -4,8 +4,9 @@ how to implement leaderboard service
 
 ## Getting Started
 
-These instructions will show how to create leaderboard service with HTTP REST.
+These instructions will show how to create leaderboard service with HTTP REST and SOCKET connection.
 
+I.HTTP REST
 ### Prerequisites
 
 You need to install something first
@@ -89,3 +90,5 @@ $sql = "DELETE user, highscore
                JOIN highscore h ON u.id_user = h.id_user
                WHERE u.id_user = '".$id_user."'		  
 ```
+##
+II.SOCKET connection
