@@ -34,10 +34,40 @@ timeupdate (TIMESTAMP)
 ```
 ### Implement
 #### User should be able to add/update a username and a score
-1. User login to game. Check if user is Adminstrator or not. If not, add score to user
-1.1.serverside
-
-1.2.clientside
+1. User login to game. Check if user is Adminstrator or not. If not, add score to user by 'id_user'
+*serverside
+Addscore.php
+```
+$id_user = $_POST["namepost"];
+$highscore = $_POST["highscore"];
+$timeupdate = $_POST["timeupdate"];
+$sql = "INSERT INTO highscore (id_user, highscore, timeupdate)
+			VALUES ('".$id_user."','".$highscore."','".$timeupdate."')";
+```
+*clientside 
+Addscore.cs
+```
+	IEnumerator AddScore(string id_user, string highscore,System.DateTime timeupdate ){
+	    double timeStamp = ConvertToToTimestamp(timeupdate);
+		WWWForm form = new WWWForm();
+		form.AddField("namepost", id_user);
+		form.AddField("highscore", highscore);
+		form.AddField("timeupdate", timeStamp);
+		var www = UnityWebRequest.Post(AddScoreURL,form);
+		yield return www.SendWebRequest();
+		if (www.isNetworkError || www.isHttpError) {
+			Debug.Log ("error" + www.ToString ());
+		} else {
+			Debug.Log ("okie" + www.ToString ());
+		}
+	}
+	
+	private double ConvertToToTimestamp(System.DateTime value)
+    {
+        double timeStamp = (System.DateTime.UtcNow - value).TotalSeconds; 
+        return timeStamp;
+    }
+```
 
 A step by step series of examples that tell you have to get a development env running
 
