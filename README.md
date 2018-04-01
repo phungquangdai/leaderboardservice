@@ -189,29 +189,10 @@ $sql = "DELETE u, h
 ## II.SOCKET CONNECTION
 ### Prerequisites
 
-You need to install something first
-
 ```
 create folder Plugins that contains file MySql.Data.dll;System.Data.dll
 ```
 
-### Database
-Create 2 table in mysql
-```
-table user
-id_user INT(10)
-name varchar(20)
-Password varchar (6)
-isAdmind BOOLEAN
-```
-
-```
-table highscore
-id_user INT(10)
-highscore varchar(10)
-timeupdate (TIMESTAMP)
-
-```
 ### Implement
 1. make file DatabaseHandler.cs to connect database MYSQL and implement query
 * DatabaseHandler.cs
