@@ -22,7 +22,7 @@ table user
 id_user INT(10)
 name varchar(20)
 Password varchar (6)
-
+isAdmind BOOLEAN
 ```
 
 ```
@@ -34,7 +34,11 @@ timeupdate (TIMESTAMP)
 ```
 ### Implement
 #### User should be able to add/update a username and a score
-1. User login to 
+1. User login to game. Check if user is Adminstrator or not. If not, add score to user
+1.1.serverside
+
+1.2.clientside
+
 A step by step series of examples that tell you have to get a development env running
 
 Say what the step will be
