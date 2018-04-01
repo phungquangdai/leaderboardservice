@@ -7,7 +7,6 @@ public class Login : MonoBehaviour {
 
 	public string inputUserName;
 	public string inputPassword;
-	public string Highscore;
 
 	string LoginURL = "http://localhost/leaderboard/Login.php";
 
