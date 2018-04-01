@@ -92,3 +92,93 @@ $sql = "DELETE user, highscore
 ```
 
 ## II.SOCKET connection
+### Prerequisites
+
+You need to install something first
+
+```
+create folder Plugins that contains file MySql.Data.dll;System.Data.dll
+```
+
+### Database
+Create 2 table in mysql
+```
+table user
+id_user INT(10)
+name varchar(20)
+Password varchar (6)
+isAdmind BOOLEAN
+```
+
+```
+table highscore
+id_user INT(10)
+highscore varchar(10)
+timeupdate (TIMESTAMP)
+
+```
+### Implement
+1. user login with correct username and password to server. then server will respon result highscore
+* client.cs
+```
+	public void SendMessageToServer()
+	{
+		string _username = username.text;
+		string _password = password.text;
+		string message = _username + "|" + _password;
+		Connect(server, port, message);
+	}
+```
+```
+void Connect(String server, int port, String message)
+	{
+		try
+		{
+			// Create a TcpClient.
+			// Note, for this client to work you need to have a TcpServer 
+			// connected to the same address as specified by the server, port
+			// combination.
+			TcpClient client = new TcpClient(server, port);
+
+			// Translate the passed message into ASCII and store it as a Byte array.
+			Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+			// Get a client stream for reading and writing.
+			//  Stream stream = client.GetStream();
+
+			NetworkStream stream = client.GetStream();
+
+			// Send the message to the connected TcpServer. 
+			stream.Write(data, 0, data.Length);
+
+			Console.WriteLine("Sent: {0}", message);
+			// Receive the TcpServer.response.
+
+			// Buffer to store the response bytes.
+			data = new Byte[256];
+
+			// String to store the response ASCII representation.
+			String responseData = String.Empty;
+
+			// Read the first batch of the TcpServer response bytes.
+			Int32 bytes = stream.Read(data, 0, data.Length);
+			responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+			Console.WriteLine("Client Received: {0}", responseData);
+
+			// Close everything.
+			stream.Close();
+			client.Close();
+		}
+		catch (ArgumentNullException e)
+		{
+			Console.WriteLine("ArgumentNullException: {0}", e);
+		}
+		catch (SocketException e)
+		{
+			Console.WriteLine("SocketException: {0}", e);
+		}
+
+		Console.WriteLine("\n Press Enter to continue...");
+		Console.Read();
+	}
+```
