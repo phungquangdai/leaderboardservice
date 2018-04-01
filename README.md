@@ -4,18 +4,37 @@ how to implement leaderboard service
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will show how to create leaderboard service with HTTP REST.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You need to install something first
 
 ```
-Give examples
+download xampp and install
+download Unity 2017.3.1f1
 ```
 
-### Installing
+### Database
+Create 2 table in mysql
+```
+table user
+id_user INT(10)
+name varchar(20)
+Password varchar (6)
 
+```
+
+```
+table highscore
+id_user INT(10)
+highscore varchar(10)
+timeupdate (TIMESTAMP)
+
+```
+### Implement
+#### User should be able to add/update a username and a score
+1. User login to 
 A step by step series of examples that tell you have to get a development env running
 
 Say what the step will be
