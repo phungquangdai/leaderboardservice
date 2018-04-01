@@ -152,7 +152,7 @@ timeupdate (TIMESTAMP)
 		}
 	}
 ```
-* then create function getHighScore() to return high score of user. Input is username and password like "DAVID|123456"
+* then create function getHighScore() to query and return high score of user. Input is username and password like "DAVID|123456"
  
  ```
  	public string getHighScore(string data){
@@ -236,7 +236,103 @@ void Connect(String server, int port, String message)
 		Console.Read();
 	}
 ```
+
+3. server get information from client and query into database to return the result back
 *server.cs
+
+```
+	void Update () {
+		string userinfo = this.GetValue ();
+		if (Serverrespond) {
+			Serverrespond = false;
+			temp = _mysqlHolder.getHighScore (userinfo);
+			highscore.text = "high score: " + temp;
+		}
+
+	}
 ```
 
 ```
+public void ListenForMessages(int port)
+	{
+		TcpListener server = null;
+		try
+		{
+			// Set the TcpListener on port 13000.
+			IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+
+			// TcpListener server = new TcpListener(port);
+			server = new TcpListener(localAddr, port);
+
+			// Start listening for client requests.
+			server.Start();
+
+			// Buffer for reading data
+			Byte[] bytes = new Byte[256];
+			String data = null;
+
+			// Enter the listening loop.
+			while (true)
+			{
+				Debug.Log("Waiting for a connection... ");
+
+				// Perform a blocking call to accept requests.
+				using (TcpClient client = server.AcceptTcpClient())
+				{
+
+					Debug.Log("Connected!");
+
+					data = null;
+
+					// Get a stream object for reading and writing
+					NetworkStream stream = client.GetStream();
+
+					int i;
+
+					// Loop to receive all the data sent by the client.
+					while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+					{
+						// Translate data bytes to a ASCII string.
+						data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+						Debug.Log(String.Format("server Received: {0}", data));
+						//items = data.Split('|');
+						lock (this.valueLock){
+							this.value = data;
+						}
+						Serverrespond = true;
+						data = data.ToUpper();
+
+						byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+
+						// Send back a response.
+						stream.Write(msg, 0, msg.Length);
+						Debug.Log(String.Format("Sent: {0}", data));
+					}
+				}
+			}
+		}
+		catch (SocketException e)
+		{
+			Debug.LogError(String.Format("SocketException: {0}", e));
+		}
+		finally
+		{
+			// Stop listening for new clients.
+			server.Stop();
+		}
+	}
+```
+
+```
+	string GetValue() {
+		// this will be filled in below
+		string val;
+		lock(this.valueLock)
+		{
+			val = this.value;
+		}
+		return val;
+	}
+```
+
+
