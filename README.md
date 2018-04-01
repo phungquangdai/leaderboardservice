@@ -125,7 +125,7 @@ Addscore.php
 
 		}
 		else{
-			$id_user = null;
+			$username = null;
 			$_highscore = null;
 			$timecreate = null;
 		}
@@ -165,23 +165,22 @@ Addscore.cs
         return timeStamp;
     }
 ```
-2. Admin login to game to see how many users updated their score in a time window.
-* serverside
+3. At serverside, We make file Admin.php and using syntax like below to see how many users updated their score in a time window.
 Admin.php
 ```
 $sql = "SELECT id_user,COUNT (*)  FROM highscore GROUP BY id_user WHERE timeupdate > '".$timeupdate1."'" AND timeupdate < '".$timeupdate2."'"
 ```
-3. Admin login to game to see how many times a user updated their score.
+4. At serverside, We make file Admin.php and using syntax like below to see how many times a user updated their score.
 
 Admin.php
 ```
 $sql = "SELECT id_user,COUNT (*)  FROM highscore GROUP BY id_user WHERE id_user = '".$id_user."'
 ```
-4. Admin login to to delete a username and score.
+5.At serverside, We make file Admin.php and using syntax like below to delete a username and score.
 
 Admin.php
 ```
-$sql = "DELETE user, highscore 
+$sql = "DELETE u, h 
                FROM user u
                JOIN highscore h ON u.id_user = h.id_user
                WHERE u.id_user = '".$id_user."'		  

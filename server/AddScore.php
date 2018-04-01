@@ -20,7 +20,7 @@
 
 		}
 		else{
-			$id_user = null;
+			$username = null;
 			$_highscore = null;
 			$timecreate = null;
 		}
